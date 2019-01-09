@@ -5,7 +5,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class DBConnection {
-	private static final String DBUrl = "jdbc:mysql://localhost:3306/panifici";
+	private static final String DBUrl = "jdbc:mysql://localhost:3306/azienda";
 	private static Connection conn=null;
 	
 	private DBConnection() {}
