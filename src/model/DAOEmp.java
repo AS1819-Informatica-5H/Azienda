@@ -12,10 +12,27 @@ public class DAOEmp {
 				"         a.COMM, d.DNAME\r\n" + 
 				"FROM EMP a LEFT OUTER JOIN EMP b ON a.MGR=b.EMPNO\r\n" + 
 				"           JOIN DEPT d ON a.DEPTNO=d.DEPTNO";
+		
+		
 		Connection c;
 		try {
 			c = DBConnection.dbConnect("root", "root");
-			PreparedStatement p=c.prepareStatement(query);
+			PreparedStatement p;
+			if ( e.getEmpno() !=0 ) {
+				query +=" WHERE a.EMPNO=?";
+				p=c.prepareStatement(query);
+				p.setInt(1, e.getEmpno());
+			} else if ( e.getEname() != null ) {
+				query +=" WHERE a.ENAME LIKE ?";
+				p=c.prepareStatement(query);
+				p.setString(1, e.getEname());
+			} else if ( e.getJob() != null) {
+				query +=" WHERE a.JOB LIKE ?";
+				p=c.prepareStatement(query);
+				p.setString(1, e.getJob());
+			} else {
+				p=c.prepareStatement(query);
+			}
 			ResultSet rs=p.executeQuery();
 			while (rs.next()) {
 				Impiegato i=new Impiegato();
@@ -25,6 +42,8 @@ public class DAOEmp {
 				i.setManager(rs.getString("MANAGER"));
 				if (rs.getDate("HIREDATE")!=null) {
 		    	   i.setHiredate(rs.getDate("HIREDATE").toLocalDate());
+				} else {
+					i.setHiredate(null);
 				}
 				i.setSal(rs.getDouble("SAL"));
 				i.setComm(rs.getDouble("COMM"));
